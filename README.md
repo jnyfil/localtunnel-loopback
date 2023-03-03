@@ -49,9 +49,12 @@ For more command options, refer to [Server Command options](#server-command-opti
 Since the client machine's configuration may differ from your local machine, the installation process can vary. For example, if you're using Colab, Node.js v14.x is already pre-installed, so you can run the client directly using the following command without any additional installation steps.
 
 ```shell
+# npx localtunnel --port 8080 --host "{your ip address or hostname}:{server's port}"
 $ npx localtunnel --port 8080 --host "http://123.123.123.100:1234"
-
 your url is: http://localhost:7860
+
+# Using HTTPS
+$ npx localtunnel --port 8080 --host "https://your.domain:1234"
 ```
 > If your server is acting as a reverse proxy (i.e. nginx) and is able to listen on port 80, then you do not need the `:1234` part of the hostname for the `localtunnel` client.
 
