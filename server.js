@@ -3,7 +3,6 @@ import Debug from 'debug';
 import http from 'http';
 import https from 'https';
 import Router from 'koa-router';
-import fs from 'fs';
 import ClientManager from './lib/ClientManager.js';
 
 const debug = Debug('localtunnel:server');
@@ -24,7 +23,7 @@ export default function (opt) {
     // root endpoint
     app.use(async (ctx, next) => {
         const { path, ip } = ctx.request;
-        console.info(`Incoming request: ${path}, IP: ${ip}`);
+        debug(`Incoming request: ${path}, IP: ${ip}`);
 
         // skip anything not on the root path
         if (path !== '/') {
@@ -38,6 +37,7 @@ export default function (opt) {
 
         if (isNewClientRequest) {
             debug('Creating new client...');
+
             const info = await manager.newClient({ ...opt, ip });
 
             const url = `http://localhost:${info.id}`;
@@ -58,11 +58,7 @@ export default function (opt) {
     });
 
     return (opt.use_https
-        ? https.createServer({
-            key: fs.readFileSync(opt.https_key_path),
-            cert: fs.readFileSync(opt.https_cert_path),
-            ca: opt.https_ca_path ? [fs.readFileSync(opt.https_ca_path)] : undefined,
-        })
+        ? https.createServer(opt.https_cert_files)
         : http.createServer())
         .addListener('request', app.callback());
 };

@@ -6,10 +6,15 @@ If you want to use it as a subdomain, use https://github.com/localtunnel/server
 
 ## Overview
 
-Due to policy reasons, web-based IDEs like Colab may have restrictions on using SSH tunneling. In this case, HTTP tunneling services like Gradio or Ngrok can be used.
+Web-based IDEs like Colab may have SSH tunneling restrictions due to policy reasons. In such cases, HTTP tunneling services such as Gradio or Ngrok can be used instead. 
 
-These tunneling services have limitations, including restricted access and speed. They can also potentially cause unauthorized access to other servers through random subdomains connecting to remote servers. Also, every time the server is restarted, the address changes, making it difficult to resume previous work, and functionality may be restricted due to CORS. However, by using this, these issues can be resolved.
+1. Restricted access and speed
+2. The tunneling server may unexpectedly stop or become inaccessible
+3. If the server goes down and then restarts, it may not be possible to resume previous work due to the changed address
+4. Unknown users may randomly connect to the tunneled address, resulting in unauthorized access
+5. The other issues caused by remote access
 
+These issues can be resolved by using this  
 But, the following prerequisites are required to use this server:
 
 * Node.js must be installed and available for use on your machine.
@@ -20,26 +25,42 @@ If you don't understand how to configure firewall settings or set up port forwar
 
 ## Use the server
 
-First, install Node.js v18.x or later from https://nodejs.org  
+First, install Node.js version 18.x or later from https://nodejs.org  
 If you are not familiar with the installation, search for how to install Node.js
 
 Then, run below:
 
 ```shell
+# run with defaults
 $ npx localtunnel-loopback # Without '--port', it run on port 80
-tcp server listening on port: 34211
+...
+server listening on port: 80
+connecting client ip: 123.123.123.123
+created id: 'cricket' # Each client is given a unique id.
+tunnel listening on port: 34211
+...
 
-# If you want a secure connection:
-$ npx localtunnel-loopback --use-https --tunnel-port 12345 # Without '--port', it run on port 443
-tcp server listening on port: 12345
+# run with secure:
+$ npx localtunnel-loopback --use-https --tunnel-port 25213 # Without '--port', it run on port 443
+...
+server listening on port: 443
+connecting client ip: 123.123.123.123
+created id: 'vegetable' # random unique id
+tunnel listening on port: 25213
+...
 
-# If you want to run the server on a different port:
+# run on a different port:
 $ npx localtunnel-loopback --port 1234 --tunnel-port 12345
-tcp server listening on port: 12345
+...
+server listening on port: 1234
+connecting client ip: 123.123.123.123
+created id: 'pizza' # random unique id
+tunnel listening on port: 12345
+...
 ```
 The localtunnel server is now running and waiting for client requests on port 1234
 
-**IMPORTANT** Make sure to configure both ports, '--port' (1234) and '--tunnel-port' (12345), in the firewall and port forwarding settings. If either of the ports is blocked, the server will not function properly."  
+**IMPORTANT** Make sure to configure both ports, `--port` (1234) and `--tunnel-port` (12345), in the firewall and port forwarding settings. If either of the ports is blocked, the server will not function properly."  
 For more command options, refer to [Server Command options](#server-command-options)
 
 > Port forwarding can vary depending on the manufacturer and model of the router, so please search for instructions on how to configure it
@@ -64,7 +85,7 @@ For detailed instructions on how to install and use the client, please refer to 
 
 ## Multiple connections
 A server can accept multiple client connections by default.  
-However, it is important to note that all ports are automatically assigned except for '--tunnel-port' and '--local-port'.
+However, it is important to note that all ports are automatically assigned except for `--tunnel-port` and `--local-port`.
 
 ```shell
 # your machine
@@ -88,27 +109,27 @@ tcp server listening on port: 33213 # message on server
 
 Connecting two or more clients can be difficult to set up with firewalls and port forwarding due to the random assignment of ports.  
 
-Inputting multiple ports separated by spaces after '--tunnel-port' as follows will bind the ports in the order in which they are entered.
+Inputting multiple ports separated by spaces after `--tunnel-port` as follows will bind the ports in the order in which they are entered.
 
 ```shell
 npx localtunnel-loopback --port 1234 --tunnel-port 33212 42421 1223
 ```
 
-Then, all of the following ports need to be opened: 1234, 33212, 42421, and 1223.
+Then, all of the following ports need to be opened: `1234`, `33212`, `42421`, and `1223`.
 
 
 ## Server Command options
 
 | Option             | Description                                                                                                                                                                     | Default Value                            |
 |--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------|
+| `--port`           | Listen on this port for outside requests. If this option is not used, the server automatically listens on port 80 or 443 depending on `--use-https` flag, which is the default behavior. | `80` or `443` depending on `--use-https` |
+| `--tunnel-port`    | Establish on this. multiple ports can be entered by separating them with a space. e.g.`--tunnel-port 1234 4221 66432`                                                                                                                                                         |                                          |
+| `--local-port`     | Access to the established destination by this port                                                                                                                                  | `7860`                                   |
 | `--use-https`      | Use this flag to indicate proxy over HTTPS.                                                                                                                                     | `false`                                  |
 | `--https-key-path` | Path to private key file. Only used when `--use-https` flag is specified.                                                                                               | `~/.ssh/private.key.pem`                 |
 | `--https-cert-path`| Path to certificate file. Only used when `--use-https` flag is specified.                                                                                               | `~/.ssh/certificate.crt.pem`             |
 | `--https-ca-path`| Path to certificate authority file. Only used when `--use-https` flag is specified                                                                                               | `~/.ssh/ca.pem`             |
 | `--address`        | IP address to bind to.                                                                                                                                                          | `0.0.0.0`                                |
-| `--port`           | Listen on this port for outside requests. If this option is not used, the server automatically listens on port 80 or 443 depending on `--use-https` flag, which is the default behavior. | `80` or `443` depending on `--use-https` |
-| `--tunnel-port`    | Establish on this port.                                                                                                                                                         |                                          |
-| `--local-port`     | Access to the established destination by this port                                                                                                                                  | `7860`                                   |
 | `--max-sockets`    | Maximum number of TCP sockets each client is allowed to establish at one time (the tunnels).                                                                                    | `10`                                     |
 
 ## Deploy

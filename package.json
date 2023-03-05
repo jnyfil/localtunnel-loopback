@@ -4,8 +4,8 @@
     "email": "jnyfufill@gmail.com"
   },
   "name": "localtunnel-loopback",
-  "description": "Your personal localhost",
-  "version": "1.0.1",
+  "description": "A tunneling just for you",
+  "version": "1.0.2",
   "license": "MIT",
   "type": "module",
   "repository": {
@@ -25,6 +25,7 @@
     "koa-router": "12.0.0",
     "localenv": "0.2.2",
     "parse-domain": "7.0.1",
+    "random-word-slugs": "0.1.6",
     "yargs": "17.7.1"
   },
   "devDependencies": {

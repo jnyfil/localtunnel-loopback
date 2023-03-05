@@ -924,6 +924,11 @@ qs@^6.11.0:
   dependencies:
     side-channel "^1.0.4"
 
+random-word-slugs@0.1.6:
+  version "0.1.6"
+  resolved "https://registry.npmjs.org/random-word-slugs/-/random-word-slugs-0.1.6.tgz"
+  integrity sha512-EVPGKyhXTdnBlMCrqBvby3nf9Jz+W/rVuP2nOi68aDZa6VJ2OXvz+VDCwl8jULBLZ1Ht8wscRA+/SogeI9NYGw==
+
 randombytes@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/randombytes/-/randombytes-2.1.0.tgz"

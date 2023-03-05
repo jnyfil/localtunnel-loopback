@@ -31,7 +31,7 @@ const argv = yargs(hideBin(process.argv))
         },
     })
     .option('tunnel-port', {
-        describe: 'Establish on this port.',
+        describe: 'Establish on this. multiple ports can be entered by separating them with a space. e.g.`--tunnel-port 1234 4221 66432`',
         array: true,
         coerce: (ports) => {
             if (!Array.isArray(ports)) {
@@ -59,7 +59,7 @@ const argv = yargs(hideBin(process.argv))
     })
     .option('https-key-path', {
         describe:
-            "Path to certificate key file.\nOnly used when 'use-https' flag is specified",
+            "Path to certificate key file. Only used when 'use-https' flag is specified",
         default: path.join(os.homedir(), '.ssh', 'private.key.pem'),
         type: 'string',
 
@@ -67,7 +67,7 @@ const argv = yargs(hideBin(process.argv))
     })
     .option('https-cert-path', {
         describe:
-            "Path to certificate PEM file.\nOnly used when 'use-https' flag is specified",
+            "Path to certificate PEM file. Only used when 'use-https' flag is specified",
         default: path.join(os.homedir(), '.ssh', 'certificate.crt.pem'),
         type: 'string',
         normalize: (value) => path.normalize(value),
@@ -115,9 +115,11 @@ if (!argv.port) {
 
 const server = CreateServer({
     use_https: argv.useHttps,
-    https_key_path: argv.httpsKeyPath,
-    https_cert_path: argv.httpsCertPath,
-    https_ca_path: argv.httpsCaPath,
+    https_cert_files: argv.useHttps ? {
+        key: fs.readFileSync(argv.httpsKeyPath),
+        cert: fs.readFileSync(argv.httpsCertPath),
+        ca: argv.httpsCaPath ? [fs.readFileSync(argv.httpsCaPath)] : undefined,
+    }: null,
     max_tcp_sockets: argv.maxSockets,
     tunnel_ports: argv.tunnelPort,
     local_port: argv.localPort,
