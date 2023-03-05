@@ -7,7 +7,7 @@ If you want to use it as a subdomain, use https://github.com/localtunnel/server
 ## Overview
 
 Web-based IDEs like Colab may have SSH tunneling restrictions due to policy reasons. In such cases, HTTP tunneling services such as Gradio or Ngrok can be used instead. 
-
+However, there are some issues such as the following:
 1. Restricted access and speed
 2. The tunneling server may unexpectedly stop or become inaccessible
 3. If the server goes down and then restarts, it may not be possible to resume previous work due to the changed address
